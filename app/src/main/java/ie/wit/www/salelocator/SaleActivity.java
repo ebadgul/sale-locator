@@ -23,6 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.Parse;
 
 public class SaleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
@@ -35,6 +36,9 @@ public class SaleActivity extends AppCompatActivity
         setContentView(R.layout.activity_sale);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        /// parse
+        Parse.initialize(this, "cjKQ2tn7uROcrOX2nHI1Fvx1YcTnSHazDLfNbrM7", "cUpyCIZV5Uio5CB6NT5dgrt5bMmUBmREGsE0BtBO");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
