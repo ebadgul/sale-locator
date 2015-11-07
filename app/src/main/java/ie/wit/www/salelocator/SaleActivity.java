@@ -1,8 +1,12 @@
 package ie.wit.www.salelocator;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -26,9 +30,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.Parse;
 
 public class SaleActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,10 @@ public class SaleActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        ///current location
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50000, 5, this);
+
         //map start
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -67,16 +76,24 @@ public class SaleActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10));
+//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocaiton, 10.0f));
+
+
         // Add a marker in Sydney and move the camera
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             mMap.setMyLocationEnabled(true);
+
         }
 //         mMap.setMyLocationEnabled(true);
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
     //end of map
     @Override
@@ -138,5 +155,33 @@ public class SaleActivity extends AppCompatActivity
         return true;
     }
 
+    /////******OnLocationListener implemented abstract methods...********
+    @Override
+    public void onLocationChanged(Location location) {
 
+        LatLng userLocation = null;
+        if(location != null){
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+            userLocation = new LatLng(lat, lng);
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10.0f));
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }
