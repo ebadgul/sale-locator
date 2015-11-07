@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_login" tools:context="ie.wit.www.salelocator.LoginActivity">
+    tools:showIn="@layout/activity_signup" tools:context="ie.wit.www.salelocator.SignupActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -19,47 +19,38 @@
         android:layout_alignParentStart="true" />
 
     <EditText
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/login_username"
+        android:id="@+id/signup_username"
         android:layout_below="@+id/username"
-        android:layout_alignEnd="@+id/username" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Password"
-        android:id="@+id/passwordd"
-        android:layout_below="@+id/login_username"
-        android:layout_alignEnd="@+id/login_username" />
+        android:id="@+id/password"
+        android:layout_below="@+id/signup_username"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/login_password"
-        android:layout_below="@+id/passwordd"
+        android:id="@+id/signup_password"
+        android:layout_below="@+id/password"
         android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/loginBtn"
-        android:layout_below="@+id/login_password"
-        android:layout_alignEnd="@+id/login_password" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="New to Sale Locator? Signup here"
-        android:id="@+id/linkToSignup"
-        android:layout_below="@+id/loginBtn"
+        android:text="Signup"
+        android:id="@+id/signupBtn"
+        android:layout_below="@+id/signup_password"
         android:layout_alignParentStart="true" />
-
 </RelativeLayout>

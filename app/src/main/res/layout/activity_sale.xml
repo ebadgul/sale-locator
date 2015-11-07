@@ -6,13 +6,8 @@
     android:fitsSystemWindows="true" tools:openDrawer="start">
 
 
-    <!-- map fragement-->
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/map"
-        tools:context="ie.wit.www.salelocator.SaleActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+
 
 
     <include layout="@layout/app_bar_sale" android:layout_width="match_parent"
