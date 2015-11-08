@@ -2,12 +2,14 @@ package ie.wit.www.salelocator;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -15,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -26,7 +29,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.Parse;
 
 public class SaleActivity extends AppCompatActivity
@@ -42,7 +44,7 @@ public class SaleActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /// parse
+        /// parse key
         Parse.initialize(this, "cjKQ2tn7uROcrOX2nHI1Fvx1YcTnSHazDLfNbrM7", "cUpyCIZV5Uio5CB6NT5dgrt5bMmUBmREGsE0BtBO");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -64,13 +66,57 @@ public class SaleActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         ///current location
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50000, 5, this);
+//        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50000, 5, this);
 
         //map start
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+    ////all the code goes here
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        // Make sure that GPS is enabled on the device
+        LocationManager mlocManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        boolean enabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if(!enabled) {
+            showDialogGPS();
+        }
+
+    }
+
+
+
+    /**
+     * Show a dialog to the user requesting that GPS be enabled
+     */
+    private void showDialogGPS() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setTitle("Enable GPS");
+        builder.setMessage("Please enable GPS for Sale Locator");
+        builder.setInverseBackgroundForced(true);
+        builder.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(
+                        new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        });
+        builder.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
+
     //start of map method
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -88,8 +134,54 @@ public class SaleActivity extends AppCompatActivity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+            locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50000, 5, this);
 
         }
+
+
+
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                final boolean enabledGPS = locationManager
+                        .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+                // if (!enabledGPS) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SaleActivity.this);
+                alertDialogBuilder.setTitle("Location services disabled");
+
+                alertDialogBuilder
+                        .setMessage("Sale Locator needs access to your location. Please turn on location access.")
+                        .setCancelable(false)
+                        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Intent intent = new Intent(
+                                        Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(intent);
+
+
+                            }
+                        }).setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+                        dialog.cancel();
+                    }
+                });
+                if(!enabledGPS){
+                    android.app.AlertDialog alerDialog = alertDialogBuilder.create();
+                    alerDialog.show();
+                    return true;
+                }
+                return false;
+
+            }
+        });
+
 //         mMap.setMyLocationEnabled(true);
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -155,6 +247,8 @@ public class SaleActivity extends AppCompatActivity
         return true;
     }
 
+    /////******OnLocationListener implemented abstract methods...********
+    /////******OnLocationListener implemented abstract methods...********
     /////******OnLocationListener implemented abstract methods...********
     @Override
     public void onLocationChanged(Location location) {
