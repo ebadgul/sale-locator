@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register"
+        android:onClick="registerBtn"
         android:id="@+id/registerBtn"
         android:layout_gravity="bottom"
         android:background="#f106c6" />
