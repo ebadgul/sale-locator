@@ -1,8 +1,7 @@
 package ie.wit.www.salelocator;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -40,18 +39,6 @@ public class SignupActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-
-
-
 
         usernameInput = (EditText) findViewById(R.id.signup_username);
         shopNameInput = (EditText) findViewById(R.id.signup_shopname);
@@ -73,10 +60,10 @@ public class SignupActivity extends AppCompatActivity {
 
                 ParseUser user = new ParseUser();
                 user.setUsername(username);
-                user.put("shopname", shopName);
-                user.put("shopaddress", shopAddress);
+                user.put("shopName", shopName);
+                user.put("shopAddress", shopAddress);
                 user.setPassword(password);
-                user.put("passwordconfirmation", passwordConfirm);
+                user.put("passwordConfirmation", passwordConfirm);
 
 //                user.setShopname()
 
@@ -86,7 +73,7 @@ public class SignupActivity extends AppCompatActivity {
                         if (e == null) {
                             Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(getApplicationContext(), "an error occured", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Please complete all the fields", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -94,10 +81,21 @@ public class SignupActivity extends AppCompatActivity {
         });
 
 
+    /*    TextView linkToMap = (TextView) findViewById(R.id.selectLocation);
+        linkToMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignupActivity.this, MapsActivity.class);
+                startActivity(intent);
 
+            }
+        });*/
 
+    }
 
-
+    public void selectLocation(View v){
+        Intent intent = new Intent(SignupActivity.this, MapsActivity.class);
+        startActivity(intent);
     }
 
 }
