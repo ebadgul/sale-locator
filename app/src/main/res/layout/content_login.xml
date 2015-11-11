@@ -49,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
+        android:onClick="loginBtn"
         android:id="@+id/loginBtn"
         android:layout_below="@+id/login_password"
         android:layout_alignEnd="@+id/login_password" />

@@ -49,18 +49,20 @@ public class LoginActivity extends AppCompatActivity {
     passwordInput = (EditText) findViewById(R.id.login_password);
         login_btn = (Button) findViewById(R.id.loginBtn);
 
-        login_btn.setOnClickListener(new View.OnClickListener(){
+        login_btn.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v){
+            public void onClick(View v) {
                 username = usernameInput.getText().toString();
                 password = passwordInput.getText().toString();
 
                 ParseUser.logInInBackground(username, password, new LogInCallback() {
                     @Override
                     public void done(ParseUser parseUser, ParseException e) {
-                        if(parseUser != null){
+                        if (parseUser != null) {
+                            Intent intent = new Intent(LoginActivity.this, ShopControl.class);
+                            startActivity(intent);
                             Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_LONG).show();
-                        }else{
+                        } else {
                             Toast.makeText(getApplicationContext(), "Something is wrong", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -70,6 +72,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }//end of OnCreate
+
+   /* public void loginBtn(View view){
+        Intent intent = new Intent(LoginActivity.this, ShopControl.class);
+        startActivity(intent);
+    }*/
 
 
 }// end of the class

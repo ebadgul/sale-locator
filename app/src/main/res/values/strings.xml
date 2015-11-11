@@ -8,5 +8,5 @@
     <string name="title_activity_maps">Set Location</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_signup">Signup</string>
-    <string name="title_activity_shop_control">ShopControl</string>
+    <string name="title_activity_shop_control">Control Panel</string>
 </resources>
