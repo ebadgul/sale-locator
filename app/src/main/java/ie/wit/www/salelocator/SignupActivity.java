@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -48,54 +49,77 @@ public class SignupActivity extends AppCompatActivity {
         signup_btn = (Button) findViewById(R.id.signupBtn);
 
         signup_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                username = usernameInput.getText().toString();
-                shopName = shopNameInput.getText().toString();
-                shopAddress = shopAddressInput.getText().toString();
-                password = passwordInput.getText().toString();
-                passwordConfirm = passwordInputConf.getText().toString();
+                                          @Override
+                                          public void onClick(View v) {
+                                              username = usernameInput.getText().toString();
+                                              shopName = shopNameInput.getText().toString();
+                                              shopAddress = shopAddressInput.getText().toString();
+                                              password = passwordInput.getText().toString();
+                                              passwordConfirm = passwordInputConf.getText().toString();
 
 
+                                              ParseUser user = new ParseUser();
+                                              user.setUsername(username);
+                                              user.put("shopName", shopName);
+                                              user.put("shopAddress", shopAddress);
+                                              user.setPassword(password);
+                                              user.put("passwordConfirmation", passwordConfirm);
 
-                ParseUser user = new ParseUser();
-                user.setUsername(username);
-                user.put("shopName", shopName);
-                user.put("shopAddress", shopAddress);
-                user.setPassword(password);
-                user.put("passwordConfirmation", passwordConfirm);
 
 //                user.setShopname()
 
-                user.signUpInBackground(new SignUpCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Please complete all the fields", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        });
+                                              user.signUpInBackground(new SignUpCallback() {
+                                                                          @Override
+                                                                          public void done(ParseException e) {
+
+                                                                              if (e == null) {
+                                                                                  Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
+                                                                              } else if (!password.equals(passwordConfirm) || password.length() <= 5) {
+                                                                                  Toast.makeText(getApplicationContext(), "Password doesn't match and shouldn't be less than 5 characters", Toast.LENGTH_LONG).show();
+
+                                                                              } else if (username.equals("") || shopName.equals("") || shopAddress.equals("") || password.equals("") || passwordConfirm.equals("")) {
+                                                                                  Toast.makeText(getApplicationContext(), "sorry man a field is empty",
+                                                                                          Toast.LENGTH_LONG).show();
+                                                                              } else {
+
+                                                                                  // Sign up didn't succeed. Look at the ParseException
+                                                                                  // to figure out what went wrong
+                                                                                  switch (e.getCode()) {
+                                                                                      case ParseException.USERNAME_TAKEN:
+                                                                                          Toast.makeText(getApplicationContext(), "Sorry, the username is taken.", Toast.LENGTH_LONG).show();
+                                                                                          break;
+                                                                                      case ParseException.USERNAME_MISSING:
+                                                                                          Toast.makeText(getApplicationContext(), "Sorry, you must supply a username to register.", Toast.LENGTH_LONG).show();
+                                                                                          break;
+                                                                                      case ParseException.PASSWORD_MISSING:
+                                                                                          Toast.makeText(getApplicationContext(), "Sorry, you must supply a password to register.", Toast.LENGTH_LONG).show();
+                                                                                          break;
+                                                                                      default:
+                                                                                          Toast.makeText(getApplicationContext(), "" + e.getLocalizedMessage() + "", Toast.LENGTH_LONG).show();
+                                                                                  }
+
+//                            e.setEnabled(true);
+                                                                              }
+//                                                                              startActivity(new Intent(SignupActivity.this, ShopControl.class));
+                                                                          }
+
+                                                                      }
+
+                                              );
 
 
-    /*    TextView linkToMap = (TextView) findViewById(R.id.selectLocation);
-        linkToMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignupActivity.this, MapsActivity.class);
-                startActivity(intent);
+                                          }
 
-            }
-        });*/
+                                      }
+
+        );
+
 
     }
 
-    public void selectLocation(View v){
+    /*public void signupBtn(View v){
         Intent intent = new Intent(SignupActivity.this, MapsActivity.class);
         startActivity(intent);
-    }
+    }*/
 
 }

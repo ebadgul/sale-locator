@@ -1,19 +1,35 @@
 package ie.wit.www.salelocator;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+
+import java.util.List;
+
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.FindCallback;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class ShopControl extends AppCompatActivity {
 
-    protected EditText cShopName;
+    //    protected EditText cShopName;
+    private SaleActivity sApp = new SaleActivity();
+
+    private EditText _name;
+    private EditText _shopName;
+    private EditText _shopAddress;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,72 +38,66 @@ public class ShopControl extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
-        final EditText name = (EditText) findViewById(R.id.cName);
+        _name = (EditText) findViewById(R.id.cName);
+        _shopName = (EditText) findViewById(R.id.cShopName);
+        _shopAddress = (EditText) findViewById(R.id.cShopAddress);
 
-//        nameFromP.setText();
+        _name.setText(SaleLocatorApp.currentShopUser.shopUserName);
+        _shopName.setText(SaleLocatorApp.currentShopUser.shopName);
+        _shopAddress.setText(SaleLocatorApp.currentShopUser.shopAddress);
+
+        /*ParseGeoPoint pgp = ParseUser.getCurrentUser().getParseGeoPoint("latitude");
+
+        Log.v("Geo Point: ", ""+pgp);*/
 
 
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("GameScore");
+        // Retrieve the object by id
         query.getInBackground("xWMyZ4YEGZ", new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
+            public void done(ParseObject gameScore, ParseException e) {
                 if (e == null) {
-                    // object will be your game score
-                     String rName = object.getString("username");
-                        name.setText("rName");
-                    int score = object.getInt("score");
-                    String playerName = object.getString("playerName");
-                    boolean cheatMode = object.getBoolean("cheatMode");
-                } else {
-                    // something went wrong
-                    Toast.makeText(getApplicationContext(), "something is wrong", Toast.LENGTH_LONG).show();
+                    // Now let's update it with some new data. In this case, only cheatMode and score
+                    // will get sent to the Parse Cloud. playerName hasn't changed.
+                    gameScore.put("username", 1338);
+                    gameScore.put("cheatMode", true);
+                    gameScore.saveInBackground();
                 }
             }
         });
 
 
-
-//        cShopName
-
-
-/*
-
-// Locate the class table named "Country" in Parse.com
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
-                "Country");
+    }// end of onCreate
 
 
-        // Specify which class to query
-        ParseQuery<ShopControl> query = ParseQuery.getQuery(ShopControl.class);
-// Specify the object id
-        query.getInBackground("aFuEsvjoHt", new GetCallback<ShopControl>() {
-            public void done(ShopControl item, ParseException e) {
-                if (e == null) {
-                    // Access data using the `get` methods for the object
-                    String body = item.getBody();
-                    // Access special values that are built-in to each object
-                    String objectId = item.getObjectId();
-                    Date updatedAt = item.getUpdatedAt();
-                    Date createdAt = item.getCreatedAt();
-                    // Do whatever you want with the data...
-                    Toast.makeText(TodoItemsActivity.this, body, Toast.LENGTH_SHORT).show();
-                } else {
-                    // something went wrong
-                }
-            }
-        });
-*/
+    public void setLocation(View view) {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.logout, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        ParseUser.logOut();
+
+        switch (item.getItemId()) {
+            case R.id.action_sign_out:
+                startActivity(new Intent(ShopControl.this, LoginActivity.class));
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 
 
+        }
 
     }
 

@@ -18,21 +18,42 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import java.util.List;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.Parse;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.ParseObject;
+import com.parse.FindCallback;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SaleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private LocationManager locationManager;
+    private MarkerOptions markerOptions;
+    private Marker marker;
+    private static List<ShopUser> allUsers = new ArrayList<ShopUser>();
+    public static ParseUser currentParseUser;
+
+    private List<ParseObject> po = new ArrayList<>();
+//    private ArrayList all = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +61,7 @@ public class SaleActivity extends AppCompatActivity
         setContentView(R.layout.activity_sale);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        //currentParseUser = ParseUser.getCurrentUser();
         /// parse key
         Parse.initialize(this, "cjKQ2tn7uROcrOX2nHI1Fvx1YcTnSHazDLfNbrM7", "cUpyCIZV5Uio5CB6NT5dgrt5bMmUBmREGsE0BtBO");
 
@@ -60,6 +81,38 @@ public class SaleActivity extends AppCompatActivity
         //map start
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+
+
+
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        query.whereNotEqualTo("shopName", "jjj");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> userList, ParseException e) {
+                if (e == null) {
+
+
+                    for (int i = 0; i< userList.size(); i++){
+//                        userList.get(i).getParseGeoPoint("latitude");
+                        userList.get(i).getParseGeoPoint("latitude");
+
+
+                        Log.v("all users", "" + userList.get(i).getParseGeoPoint("latitude"));
+//                      allUsers = userList.get(i).getPa
+                    }
+
+
+                    Log.e("score", "Retrieved " + userList.size() + " Points");
+                } else {
+                    Log.e("score", "Error: " + e.getMessage());
+                }
+            }
+        });
+
+
+
     }
     ////all the code goes here
 
@@ -80,7 +133,7 @@ public class SaleActivity extends AppCompatActivity
 
 
     /**
-     * Show a dialog to the user requesting that GPS be enabled
+     * Show a dialog to the user requesting to enable GPS
      */
     private void showDialogGPS() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -116,6 +169,24 @@ public class SaleActivity extends AppCompatActivity
 
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10));
 //        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocaiton, 10.0f));
+//        ParseGeoPoint pgp = currentParseUser.getParseGeoPoint("latitude");
+//
+//        pgp.getLatitude();
+     /*      currentParseUser  = allUsers.get(i).getParseGeoPoint("latitude");
+            po = allUsers.get(i).getParseGeoPoint("latitude");
+//
+//
+        markerOptions = new MarkerOptions()
+                .position(new LatLng(po.getLatitude(), lat.getLongitude()))
+                .title(currentParseUser.getString("shopName"))
+                .snippet(currentParseUser.getString("shopAddress"))
+                .draggable(false);
+
+
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        marker = googleMap.addMarker(markerOptions);*/
+
+
 
 
         // Add a marker in Sydney and move the camera
@@ -176,6 +247,28 @@ public class SaleActivity extends AppCompatActivity
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
     //end of map
+
+
+// parse
+    public ShopUser toUser(ParseUser pUser){
+        String uName = pUser.getUsername();
+        String shopName = pUser.getString("shopName");
+        String shopAddress = pUser.getString("shopAddress");
+
+        ShopUser user = new ShopUser(uName, shopName, shopAddress);
+        return user;
+    }
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

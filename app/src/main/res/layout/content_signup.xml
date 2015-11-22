@@ -110,21 +110,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Signup"
+        android:onClick="signupBtn"
         android:id="@+id/signupBtn"
         android:layout_below="@+id/signup_passwordC"
         android:layout_alignParentStart="true" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Select location on map"
-            android:onClick="selectLocation"
-            android:id="@+id/selectLocation"
-            android:layout_marginBottom="14dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:gravity="center_horizontal" />
 
     </LinearLayout>
     </ScrollView>
