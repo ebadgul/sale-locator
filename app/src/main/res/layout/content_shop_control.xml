@@ -26,9 +26,9 @@
         android:id="@+id/cName"
         android:layout_below="@+id/name"
         android:layout_alignParentStart="true"
-        android:editable="false"
-        android:enabled="false"
-        android:focusable="false" />
+        android:editable="true"
+        android:enabled="true"
+        android:focusable="true" />
 
     <TextView
         android:layout_width="match_parent"
@@ -99,5 +99,15 @@
         android:id="@+id/setLocation"
         android:layout_below="@+id/cGoMapScreen"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Details"
+        android:id="@+id/updateDetails"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/setLocation"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

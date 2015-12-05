@@ -121,28 +121,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    /*    final EditText name = (EditText) findViewById(R.id.cName);
 
-//        nameFromP.setText();
-
-
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
-        query.getInBackground("xWMyZ4YEGZ", new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    // object will be your game score
-                    String rName = object.getString("username");
-                    name.setText("rName");
-                    int score = object.getInt("score");
-                    String playerName = object.getString("playerName");
-                    boolean cheatMode = object.getBoolean("cheatMode");
-                } else {
-                    // something went wrong
-                    Toast.makeText(getApplicationContext(), "something is wrong", Toast.LENGTH_LONG).show();
-                }
-            }
-        });*/
 
 
     }//end of OnCreate

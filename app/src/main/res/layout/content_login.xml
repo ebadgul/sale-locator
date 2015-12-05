@@ -25,7 +25,8 @@
         android:ems="10"
         android:id="@+id/login_username"
         android:layout_below="@+id/username"
-        android:layout_alignEnd="@+id/username" />
+        android:layout_alignEnd="@+id/username"
+        android:focusable="true" />
 
     <TextView
         android:layout_width="match_parent"

@@ -21,6 +21,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
 import java.util.List;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,7 +53,9 @@ public class SaleActivity extends AppCompatActivity
     private Marker marker;
     private static List<ShopUser> allUsers = new ArrayList<ShopUser>();
     public static ParseUser currentParseUser;
+    private ArrayList<ParseGeoPoint>latitudesMap = new ArrayList<ParseGeoPoint>();
 
+    private List<ParseObject> uuserList;
     private List<ParseObject> po = new ArrayList<>();
 //    private ArrayList all = new ArrayList();
 
@@ -79,9 +83,8 @@ public class SaleActivity extends AppCompatActivity
 //        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 50000, 5, this);
 
         //map start
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
 
 
@@ -92,19 +95,43 @@ public class SaleActivity extends AppCompatActivity
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> userList, ParseException e) {
                 if (e == null) {
-
-
-                    for (int i = 0; i< userList.size(); i++){
+                    mMap = mapFragment.getMap();
+                    System.out.println("fUcK U" + userList.size());
+                    for (int i = 0; i< userList.size(); i++) {
+                        try {
 //                        userList.get(i).getParseGeoPoint("latitude");
-                        userList.get(i).getParseGeoPoint("latitude");
+
+                            // up == user point
+                            ParseGeoPoint up = userList.get(i).getParseGeoPoint("latitude");
+                            String shopName = userList.get(i).getString("shopName");
+                            String shopAddress = userList.get(i).getString("shopAddress");
+
+                            System.out.print("shopname   ||" +userList.get(i).getString("shopName"));
+
+                            // DO ALL THE UPDATE SHITE WHERE U ACTUALLY GET THE STUFF
+
+                            System.out.println("DS" + up.getLatitude() + "||" + up.getLongitude());
+
+                        markerOptions = new MarkerOptions()
+                                .position(new LatLng(up.getLatitude(), up.getLongitude()))
+                                .title(shopName)
+                                .snippet(shopAddress)
+                                .draggable(false);
+
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                        marker = mMap.addMarker(markerOptions);
+
+//                        userList.get(i).getParseUser().name("name");
 
 
-                        Log.v("all users", "" + userList.get(i).getParseGeoPoint("latitude"));
+                            Log.v("all users", "" + userList.get(i).getParseGeoPoint("latitude"));
 //                      allUsers = userList.get(i).getPa
+
+                        } catch (Exception ee) {
+                            ee.printStackTrace();
+                        }
                     }
 
-
-                    Log.e("score", "Retrieved " + userList.size() + " Points");
                 } else {
                     Log.e("score", "Error: " + e.getMessage());
                 }
@@ -115,6 +142,11 @@ public class SaleActivity extends AppCompatActivity
 
     }
     ////all the code goes here
+
+    public void places(MenuItem item){
+        startActivity(new Intent(SaleActivity.this, Places.class));
+
+    }
 
     @Override
     public void onResume(){
@@ -161,21 +193,24 @@ public class SaleActivity extends AppCompatActivity
     //start of map method
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d("null", "MAP CALLED");
         mMap = googleMap;
 
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10));
 //        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocaiton, 10.0f));
 //        ParseGeoPoint pgp = currentParseUser.getParseGeoPoint("latitude");
 //
 //        pgp.getLatitude();
-     /*      currentParseUser  = allUsers.get(i).getParseGeoPoint("latitude");
+      /*    currentParseUser  = allUsers.get(i).getParseGeoPoint("latitude");
             po = allUsers.get(i).getParseGeoPoint("latitude");
-//
-//
+*/
+
+/*
         markerOptions = new MarkerOptions()
                 .position(new LatLng(po.getLatitude(), lat.getLongitude()))
                 .title(currentParseUser.getString("shopName"))
@@ -184,8 +219,9 @@ public class SaleActivity extends AppCompatActivity
 
 
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-        marker = googleMap.addMarker(markerOptions);*/
+        marker = googleMap.addMarker(markerOptions);
 
+*/
 
 
 
@@ -318,8 +354,6 @@ public class SaleActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 

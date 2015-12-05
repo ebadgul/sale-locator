@@ -17,4 +17,6 @@
         tools:context="ie.wit.www.salelocator.SaleActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
+
+
 </RelativeLayout>
