@@ -1,13 +1,11 @@
 package ie.wit.www.salelocator;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -58,7 +56,6 @@ public class SignupActivity extends AppCompatActivity {
                                               passwordConfirm = passwordInputConf.getText().toString();
 
 
-                                              ParseUser user = new ParseUser();
                                               user.setUsername(username);
                                               user.put("shopName", shopName);
                                               user.put("shopAddress", shopAddress);
@@ -66,12 +63,9 @@ public class SignupActivity extends AppCompatActivity {
                                               user.put("passwordConfirmation", passwordConfirm);
 
 
-//                user.setShopname()
-
                                               user.signUpInBackground(new SignUpCallback() {
                                                                           @Override
                                                                           public void done(ParseException e) {
-
                                                                               if (e == null) {
                                                                                   Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
                                                                               } else if (!password.equals(passwordConfirm) || password.length() <= 5) {
@@ -98,9 +92,7 @@ public class SignupActivity extends AppCompatActivity {
                                                                                           Toast.makeText(getApplicationContext(), "" + e.getLocalizedMessage() + "", Toast.LENGTH_LONG).show();
                                                                                   }
 
-//                            e.setEnabled(true);
                                                                               }
-//                                                                              startActivity(new Intent(SignupActivity.this, ShopControl.class));
                                                                           }
 
                                                                       }
